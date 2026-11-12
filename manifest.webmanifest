@@ -1,0 +1,11 @@
+{
+  "name": "AI Ultimate Assistant",
+  "short_name": "AI Assistant",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#101522",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

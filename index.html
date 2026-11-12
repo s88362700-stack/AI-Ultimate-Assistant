@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101522">
+  <meta name="description" content="مساعدك الذكي للدراسة والبرمجة والكتابة">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>AI Ultimate Assistant</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1020;--panel:#141c2e;--line:#27334b;--muted:#9aa8bf;--accent:#7c8cff;--text:#f4f7ff}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at top,#1b2850 0,#0b1020 48%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+    .app{max-width:760px;margin:auto;min-height:100vh;display:flex;flex-direction:column;padding:18px}
+    header{display:flex;align-items:center;gap:12px;padding:12px 4px 20px}
+    .logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,#8292ff,#43d6c5);display:grid;place-items:center;color:#081020;font-size:22px;font-weight:900}
+    h1{font-size:18px;margin:0} .sub{font-size:12px;color:var(--muted);margin-top:3px}
+    .status{margin-inline-start:auto;font-size:11px;color:#a7f3d0;border:1px solid #245b4c;padding:6px 9px;border-radius:20px}
+    .welcome{background:linear-gradient(145deg,#1b2741,#141c2e);border:1px solid var(--line);border-radius:22px;padding:22px;margin:8px 0 18px}
+    .welcome h2{font-size:23px;margin:0 0 8px}.welcome p{color:var(--muted);line-height:1.7;margin:0}
+    .tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
+    .tool{border:1px solid var(--line);background:#141c2e;border-radius:16px;padding:14px;text-align:right;color:var(--text);font:inherit}
+    .tool b{display:block;margin-bottom:5px}.tool span{font-size:12px;color:var(--muted)}
+    #messages{display:flex;flex-direction:column;gap:10px;padding:8px 0 16px}
+    .msg{max-width:88%;padding:12px 14px;border-radius:16px;line-height:1.65;white-space:pre-wrap}
+    .bot{background:#18233a;border:1px solid var(--line);align-self:flex-start;border-top-right-radius:5px}
+    .user{background:#394a9b;align-self:flex-end;border-top-left-radius:5px}
+    .composer{margin-top:auto;position:sticky;bottom:0;background:linear-gradient(transparent,#0b1020 18%);padding:14px 0 8px}
+    .inputrow{display:flex;gap:8px;background:#141c2e;border:1px solid var(--line);border-radius:18px;padding:8px}
+    textarea{flex:1;resize:none;min-height:44px;max-height:130px;background:transparent;border:0;outline:0;color:var(--text);font:inherit;padding:10px}
+    button{cursor:pointer} .send{border:0;border-radius:13px;background:var(--accent);color:#081020;font-weight:800;padding:0 17px}
+    .hint{font-size:11px;color:var(--muted);text-align:center;margin:8px 0}
+    @media(min-width:600px){.tools{grid-template-columns:repeat(4,minmax(0,1fr))}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="logo">AI</div>
+      <div><h1>AI Ultimate Assistant</h1><div class="sub">مساعدك للدراسة والبرمجة والإبداع</div></div>
+      <div class="status">واجهة تجريبية</div>
+    </header>
+    <section class="welcome">
+      <h2>أهلاً بيك 👋</h2>
+      <p>اكتب سؤالك بالعربي أو بالإنجليزي. دي النسخة الأولى لتجربة شكل التطبيق؛ ربط نموذج ذكاء اصطناعي حقيقي هيكون في مرحلة لاحقة.</p>
+    </section>
+    <section class="tools" aria-label="أدوات المساعد">
+      <button class="tool" data-prompt="ساعدني أذاكر موضوعًا خطوة بخطوة"><b>📚 الدراسة</b><span>شرح وتلخيص</span></button>
+      <button class="tool" data-prompt="ساعدني أتعلم البرمجة"><b>💻 البرمجة</b><span>تعلم وكتابة أكواد</span></button>
+      <button class="tool" data-prompt="ساعدني أتدرب على اللغة الإنجليزية"><b>🌍 الإنجليزية</b><span>محادثة وتصحيح</span></button>
+      <button class="tool" data-prompt="اشرح لي كيف أتعامل مع ملف PDF"><b>📄 الملفات</b><span>تجهيز لتحليل الملفات</span></button>
+    </section>
+    <section id="messages" aria-live="polite">
+      <div class="msg bot">أقدر أساعدك في التخطيط والتعلم. جرّب تكتب رسالة أو اختار مجال من فوق.</div>
+    </section>
+    <section class="composer">
+      <div class="inputrow">
+        <textarea id="prompt" placeholder="اكتب رسالتك هنا..." rows="1"></textarea>
+        <button class="send" id="send">إرسال</button>
+      </div>
+      <div class="hint">تنبيه: الردود هنا تجريبية وليست متصلة حاليًا بخدمة AI.</div>
+    </section>
+  </main>
+  <script>
+    const messages=document.getElementById('messages'), input=document.getElementById('prompt');
+    function add(text,who){const el=document.createElement('div');el.className='msg '+who;el.textContent=text;messages.appendChild(el);el.scrollIntoView({behavior:'smooth',block:'end'});}
+    function send(text=input.value.trim()){
+      if(!text)return; add(text,'user'); input.value='';
+      add('وصلني سؤالك. دي نسخة تصميم أولية فقط؛ لسه محتاجين نربط التطبيق بخدمة ذكاء اصطناعي عشان أقدر أجاوبك فعليًا.','bot');
+    }
+    document.getElementById('send').addEventListener('click',()=>send());
+    input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+    document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.prompt;input.focus();}));
+    if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+  </script>
+</body>
+</html>
